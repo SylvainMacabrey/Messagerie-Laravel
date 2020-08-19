@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['middleware' => ['auth:api']], function () {
+    Route::get('conversations', 'Api\ConversationController@index')->name('conversations.index');
+    Route::get('conversations/{user}', 'Api\ConversationController@show')->middleware('can:talkTo,user')->name('conversatins.show');
+    Route::post('conversations/{user}', 'Api\ConversationController@store')->middleware('can:talkTo,user')->name('conversations.store');
+});
